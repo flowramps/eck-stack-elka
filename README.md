@@ -3,6 +3,9 @@ O modelo abaixo foi um exemplo de POC e inclui alguns sintomas identificados dur
 
 Diagrama de arquitetura (incluindo detalhes sobre a alocação de recursos dos componentes e namespaces) - Instalação em um único namespace eck-elasticsearch, com recursos computacionais definidos dentro de cada arquivo values.
 
+Quantidade de nodes e capacidade de cada nó CPU / MEMORIA
+
+![image](https://github.com/user-attachments/assets/1c0de429-b6d7-4d3a-9f46-977a86885c8c)
 
 
 ### eck-operator
