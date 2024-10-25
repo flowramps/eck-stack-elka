@@ -1,3 +1,6 @@
+## O modelo abaixo foi um exemplo de POC e inclui alguns sintomas identificados durante a instalação
+
+
 ### eck-operator
 
 Repositório do values 
@@ -19,13 +22,13 @@ Instalação
 ```
 helm install eck-elasticsearch elastic/eck-elasticsearch --version 0.12.1 -f values-eck-elasticsearch.yaml -n eck-elasticsearch
 ```
-Habilitamos as linhas 43 a 50 referente ao monitoring e essa função foi possivel visualizar o Cluster overview
+Habilitamos as linhas 43 a 50 referentes ao monitoramento, e essa função possibilitou visualizar o Cluster Overview.
 
 ![image](https://github.com/user-attachments/assets/8f80697b-5b41-4cff-9fe1-a8da08bef0b4)
 
 
 
-Foi necessário inserir as seguintes linhas dentro do values do elasticsearch
+Foi necessário inserir as seguintes linhas dentro do values do Elasticsearch:
 ```
 nodeSets:
 - name: masters
@@ -71,12 +74,12 @@ nodeSets:
         requests:
           storage: 35Gi
 ```
-Foi necessário habilitar as linhas 310 a 324 do initContainers para melhorar a performance, mas, tivemos problemas de permissão para executar o sysctl
+Foi necessário habilitar as linhas 310 a 324 do initContainers para melhorar a performance, mas tivemos problemas de permissão ao executar o sysctl:
 ```
 sysctl -w vm.max_map_count=262144
 ```
 
-Foi necessário ajustar o ingress para trabalhar com os seguintes valores, pois tinhamos problemas de protocolo HTTPS
+Foi necessário ajustar o Ingress para trabalhar com os seguintes valores, pois tínhamos problemas com o protocolo HTTPS:
 ```
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
@@ -98,11 +101,11 @@ Instalação
 ```
 helm install eck-kibana elastic/eck-kibana --version 0.12.1 -f values-eck-kibana.yaml -n eck-elasticsearch
 ```
-OBS: namespace da police não deixa ser inserido com valores exemplo "-" eck-etasticsearch precisa inserir com o nome sem nenhum caracter especial 
+OBS: O namespace da policy não pode conter caracteres especiais, como "-", portanto, eck-elasticsearch precisa ser nomeado sem caracteres especiais.
 Ex:
 ![image](https://github.com/user-attachments/assets/dfcfc365-6efc-434c-aabb-b913c678bbfb)
 
-Inserido nas linhas 46 a 51 os valores para APM
+Inserido nas linhas 46 a 51 os valores para o APM:
 ```
   config:
     elastic:
@@ -112,12 +115,12 @@ Inserido nas linhas 46 a 51 os valores para APM
         secretToken: apm-token
 ```
 
-Foi necesário desativar o campo xpack.fleet.agents.elasticsearch.hosts para que pudecemos editar e inserir os valores abaixo devido a alguns erros de cloud provider e ssl que estavam sendo apresentados em log no agent do kuberntes na linha 53
+Foi necessário desativar o campo xpack.fleet.agents.elasticsearch.hosts para podermos editar e inserir os valores abaixo, devido a alguns erros de provedor de nuvem e SSL que estavam sendo exibidos nos logs do agente Kubernetes na linha 53:
 ```
 #xpack.fleet.agents.elasticsearch.hosts: ["https://elasticsearch-es-internal-http.eck-elasticsearch.svc:9200"]
 ```
 
-Adicionar dentro do config via web no kibana, os seguintes valores no edit do output do Elasticsearch do campo app/fleet/settings/outputs/fleet-default-output
+Adicione os seguintes valores no campo app/fleet/settings/outputs/fleet-default-output através do editor web no Kibana:
 
 ```
 ssl.verification_mode: none
@@ -128,9 +131,10 @@ processors:
 ```
 Ex:
 
-![image](https://github.com/user-attachments/assets/370bf26f-ab44-495d-839b-2048b94c1b32)
+![image](https://github.com/user-attachments/assets/ecc1ffee-8ba6-4678-995f-ba111bcf2310)
 
-Foi necessário insrir as linha 78 a 88 para habilitar a integração do APM dentro do fleet-server
+
+Foi necessário inserir as linhas 78 a 88 para habilitar a integração do APM dentro do fleet-server:
 
 ```
       - package:
@@ -146,7 +150,7 @@ Foi necessário insrir as linha 78 a 88 para habilitar a integração do APM den
             value: apm-token
 ```
 
-Foi necessário inserir a seguinte anotation para que o ingress funcionasse 
+Foi necessário inserir a seguinte anotação para que o Ingress funcionasse:
 
 ```
   annotations:
@@ -154,7 +158,7 @@ Foi necessário inserir a seguinte anotation para que o ingress funcionasse
 ```
 
 
-Foi necessário implantar o serviço do APM na mão, pelo arquivo service-apm.yaml
+Foi necessário implantar o serviço do APM manualmente, utilizando o arquivo service-apm.yaml.
 
 Ex:
 ![image](https://github.com/user-attachments/assets/fae65301-5a17-4f1a-8cd3-9e7466684358)
@@ -171,7 +175,7 @@ Instalação
 helm install eck-fleet-server elastic/eck-fleet-server --version 0.12.1 -f values-eck-fleet-server.yaml -n eck-elasticsearch
 ```
 
-Foi necessário inserir as seguintes linhas 71 a 76 para que a porta pudesse ser aberta dentro do container 
+Foi necessário inserir as seguintes linhas (71 a 76) para que a porta pudesse ser aberta dentro do container:
 ```
 containers:
   - name: agent  
@@ -182,8 +186,7 @@ containers:
 ```
 
 
-Caso seja necessário validar a porta se está aberta dentro do pod "8200" será necessário acessar o pod e instalar os seguintes recursos para visualização!
-Acessar container 
+Para validar se a porta "8200" está aberta dentro do pod, é necessário acessar o pod e instalar as seguintes ferramentas para visualização: Acessar o container:
 ```
 k exec -it fleet-server-agent-5874d7c968-6xfwr /bin/bash
 ```
@@ -198,7 +201,7 @@ Ex:
 
 
 ### Install elastic-agent 
-Download do manifesto via portal kibana tivemos problemas na integração, a solução foi utilizar o seguinte arquivo disposnibilizado no link abaixo e tivemos exito na integração!
+Para resolver problemas na integração, foi utilizado o seguinte manifesto, disponível no link abaixo, com sucesso:
 
 ```
 https://raw.githubusercontent.com/elastic/elastic-agent/8.4/deploy/kubernetes/elastic-agent-managed-kubernetes.yaml
@@ -207,6 +210,7 @@ https://raw.githubusercontent.com/elastic/elastic-agent/8.4/deploy/kubernetes/el
 
 ### Deletar CRDs
 
+Foi observado que, se for necessário realizar a desinstalação via Helm, é preciso executar o comando abaixo manualmente para remover qualquer resquício de instalação dos CRDs.
 ```
 kubectl delete -f https://download.elastic.co/downloads/eck/2.14.0/crds.yaml
 ```
