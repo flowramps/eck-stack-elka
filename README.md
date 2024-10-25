@@ -1,4 +1,8 @@
-## O modelo abaixo foi um exemplo de POC e inclui alguns sintomas identificados durante a instalação
+O modelo abaixo foi um exemplo de POC e inclui alguns sintomas identificados durante a instalação
+
+
+Diagrama de arquitetura (incluindo detalhes sobre a alocação de recursos dos componentes e namespaces) - Instalação em um único namespace eck-elasticsearch, com recursos computacionais definidos dentro de cada arquivo values.
+
 
 
 ### eck-operator
